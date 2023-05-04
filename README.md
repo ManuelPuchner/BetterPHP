@@ -8,13 +8,13 @@ $ docker compose -f docker-compose-db.yaml up [-d]
 
 ### Create create-script
 ````shell
-$ php betterphp/cmd/generateTables.php 
+$ php betterphp/cli/generateTables.php 
 ````
 
 ### Generate the api
 - by running the command you will generate the api in the `dist` folder
 ````shell
-$ php betterphp/cmd/index.php 
+$ php betterphp/cli/index.php 
 ````
 
 ### Create a .env file
