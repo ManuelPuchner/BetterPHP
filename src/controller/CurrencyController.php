@@ -12,10 +12,9 @@ class CurrencyController extends Controller
 
     public function addCurrency(Currency $currency): array
     {
-        pg_insert($this->getConnection(), 'currency', array(
-            'name' => $currency->getName(),
-            'code' => $currency->getCode()
-        ));
+        $data = $currency->jsonSerialize();
+        unset($data['id']);
+        pg_insert($this->getConnection(), 'currency', $data);
 
         return $this->getCurrencies();
     }
