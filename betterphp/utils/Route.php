@@ -1,6 +1,6 @@
 <?php
 
-namespace utils;
+namespace betterphp\utils;
 use Exception;
 
 require_once 'RouteIF.php';

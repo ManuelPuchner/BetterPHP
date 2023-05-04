@@ -1,4 +1,6 @@
 /dist
+*/*.env
+/db-postgres-betterphp
 
 # Created by https://www.toptal.com/developers/gitignore/api/phpstorm+all
 # Edit at https://www.toptal.com/developers/gitignore?templates=phpstorm+all

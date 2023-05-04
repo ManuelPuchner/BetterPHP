@@ -1,6 +1,7 @@
 <?php
 
-namespace utils;
+namespace betterphp\utils;
+
 require_once 'HttpErrorCodes.php';
 class Response
 {

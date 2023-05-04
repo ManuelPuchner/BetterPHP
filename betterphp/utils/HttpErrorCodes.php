@@ -1,6 +1,6 @@
 <?php
 
-namespace utils;
+namespace betterphp\utils;
 class HttpErrorCodes
 {
     const HTTP_CONTINUE = 100;
