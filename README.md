@@ -12,6 +12,7 @@ $ php betterphp/cmd/generateTables.php
 ````
 
 ### Generate the api
+- by running the command you will generate the api in the `dist` folder
 ````shell
 $ php betterphp/cmd/index.php 
 ````
