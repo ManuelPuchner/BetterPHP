@@ -16,6 +16,11 @@ $ php betterphp/cmd/generateTables.php
 $ php betterphp/cmd/index.php 
 ````
 
+### Create a .env file
+- in the `src` folder
+- see `.env.example`
+- set the database credentials
+
 ### Start the api
 - Either use Apache or
 - Use the php built-in server
