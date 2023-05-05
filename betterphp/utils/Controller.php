@@ -2,14 +2,14 @@
 
 namespace betterphp\utils;
 
-use PgSql\Connection;
+use PDO;
 
 require_once __DIR__ . '/DBConnection.php';
 
 abstract class Controller
 {
     private static ?Controller $instance = null;
-    private static Connection $connection;
+    private static PDO $connection;
 
     public static function getInstance(): Controller
     {
@@ -20,7 +20,7 @@ abstract class Controller
         return self::$instance;
     }
 
-    public function getConnection(): Connection
+    public function getConnection(): PDO
     {
         return self::$connection;
     }

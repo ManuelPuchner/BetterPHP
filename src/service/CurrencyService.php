@@ -21,5 +21,6 @@ Route::post('/test', function (array $body) {
 });
 
 Route::get('/test/{id}', function (int $id) {
-    return Response::ok('Hello World', $id);
+        $data = CurrencyController::getInstance()->getById($id);
+        return Response::ok('Hello World', $data);
 });

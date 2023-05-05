@@ -41,7 +41,9 @@ echo $baseApi . PHP_EOL;
 
 if (file_exists($ROOT . '/dist')) {
     echo Color::get('BASE API DIRECTORY ALREADY EXISTS, REMOVING CONTENTS OF API DIRECTORY', Color::RED) . PHP_EOL;
-    deleteAll($ROOT . '/dist');
+    deleteAll($ROOT . '/dist/api');
+    deleteAll($ROOT . '/dist/controller');
+    deleteAll($ROOT . '/dist/model');
 }
 
 @mkdir($baseApi, 0777, true);

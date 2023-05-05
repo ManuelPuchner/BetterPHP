@@ -118,7 +118,7 @@ function callableToString(callable $callable) : string {
         $endLine = $reflection->getEndLine();
         $length = $endLine - $startLine - 1;
         $source = file($reflection->getFileName());
-        $body = implode("", array_slice($source, $startLine, $length));
+        $body = implode("\t", array_slice($source, $startLine, $length));
         $methodSignature = '(';
         $parameters = $reflection->getParameters();
         foreach ($parameters as $parameter) {
@@ -129,7 +129,17 @@ function callableToString(callable $callable) : string {
             $methodSignature .= ', ';
         }
         $methodSignature = rtrim($methodSignature, ', ') . ')';
-        return 'function ' . $methodSignature . ' {' . $body . '};';
+
+        $temp =  'function ' . $methodSignature . ' {' . PHP_EOL;
+        $temp .= "\ttry {" . PHP_EOL;
+        $temp .= "\t" .  $body . PHP_EOL;
+        $temp .= "\t} catch (Exception \$e) {" . PHP_EOL;
+        $temp .= "\t\treturn new Response(\$e->getCode(), \$e->getMessage());" . PHP_EOL;
+        $temp .= "\t}" . PHP_EOL;
+        $temp .= "};" . PHP_EOL;
+
+        return $temp;
+
     } catch (ReflectionException $e) {
         return '';
     }
@@ -168,10 +178,10 @@ use controller\CurrencyController;
 use betterphp\utils\DBConnection;
 use model\Currency;
 
-require_once '" . dirname(__DIR__ ) . "/../dist/controller/CurrencyController.php';
-require_once '" . dirname(__DIR__) . "/utils/Response.php';
-require_once '" . dirname(__DIR__) . "/utils/DBConnection.php';
-require_once '" . dirname(__DIR__) . "/../dist/model/Currency.php';
+require_once " . "\$_SERVER['DOCUMENT_ROOT']  . '" . "/controller/CurrencyController.php';
+require_once " . "\$_SERVER['DOCUMENT_ROOT']  . '" . "/../betterphp/utils/Response.php';
+require_once " . "\$_SERVER['DOCUMENT_ROOT']  . '" . "/../betterphp/utils/DBConnection.php';
+require_once " . "\$_SERVER['DOCUMENT_ROOT']  . '" . "/model/Currency.php';
 
     " . PHP_EOL;
 }

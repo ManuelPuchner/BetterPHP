@@ -20,7 +20,6 @@ class Response
         $this->data = $data;
     }
 
-
     public function send(): void
     {
         header('Content-Type: application/json');
@@ -33,6 +32,11 @@ class Response
             'data' => $this->data
         ));
         exit();
+    }
+
+    public static function notFound(string $getMessage): Response
+    {
+        return new Response(HttpErrorCodes::HTTP_NOT_FOUND, $getMessage);
     }
 
     public static function ok(

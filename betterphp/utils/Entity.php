@@ -14,7 +14,11 @@ abstract class Entity implements JsonSerializable
         $this->id = $id;
     }
 
-    abstract public function getId(): int;
+    abstract public function getId();
+
+    abstract public function setId(int $id);
 
     abstract public function jsonSerialize(): array;
+
+    abstract public static function getFromRow(array $row): Entity;
 }

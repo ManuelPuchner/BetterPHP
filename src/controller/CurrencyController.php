@@ -3,6 +3,7 @@
 namespace controller;
 
 use betterphp\utils\Controller;
+use Exception;
 use model\Currency;
 
 require_once dirname(__DIR__) . '/../betterphp/utils/Controller.php';
@@ -14,17 +15,37 @@ class CurrencyController extends Controller
     {
         $data = $currency->jsonSerialize();
         unset($data['id']);
-        pg_insert($this->getConnection(), 'currency', $data);
+        $sql = 'INSERT INTO currency (name, code) VALUES (:name, :code)';
+        $stmt = $this->getConnection()->prepare($sql);
+        $stmt->execute($data);
+        $currency->setId($this->getConnection()->lastInsertId());
 
         return $this->getCurrencies();
     }
 
     public function getCurrencies(): array {
-        $currencies = array();
-        $result = pg_query($this->getConnection(), 'SELECT * FROM currency');
-        while ($row = pg_fetch_assoc($result)) {
-            $currencies[] = new Currency($row['id'], $row['name'], $row['code']);
+        $sql = 'SELECT * FROM currency';
+        $stmt = $this->getConnection()->prepare($sql);
+        $stmt->execute();
+        $currencies = [];
+        while ($row = $stmt->fetch()) {
+            $currencies[] = Currency::getFromRow($row);
         }
         return $currencies;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function getById(int $id): Currency
+    {
+        $sql = 'SELECT * FROM currency WHERE id = :id';
+        $stmt = $this->getConnection()->prepare($sql);
+        $stmt->execute(['id' => $id]);
+        $row = $stmt->fetch();
+        if (!$row) {
+            throw new Exception('Currency not found', HttpErrorCodes::HTTP_NOT_FOUND);
+        }
+        return Currency::getFromRow($row);
     }
 }

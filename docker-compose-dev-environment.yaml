@@ -7,7 +7,6 @@ services:
       POSTGRES_USER: app
       POSTGRES_PASSWORD: app
       POSTGRES_DB: app
-
     ports:
       - 6543:5432
     volumes:
@@ -30,6 +29,19 @@ services:
     networks:
       - postgres-betterphp
     restart: unless-stopped
+
+  web:
+    container_name: web-betterphp
+    build:
+        context: .
+        dockerfile: PHP.Dockerfile
+    volumes:
+      - ./dist:/var/www/html
+      - ./betterphp/utils:/var/www/betterphp/utils
+    ports:
+      - 8080:80
+    networks:
+        - postgres-betterphp
 
 networks:
   postgres-betterphp:

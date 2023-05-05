@@ -32,6 +32,11 @@ class Currency extends Entity
         return $this->id;
     }
 
+    public function setId(int $id): void
+    {
+        $this->id = $id;
+    }
+
     public function getName(): string
     {
         return $this->name;
@@ -49,5 +54,10 @@ class Currency extends Entity
             'name' => $this->name,
             'code' => $this->code
         ];
+    }
+
+    public static function getFromRow(array $row): Currency
+    {
+        return new Currency($row['id'], $row['name'], $row['code']);
     }
 }

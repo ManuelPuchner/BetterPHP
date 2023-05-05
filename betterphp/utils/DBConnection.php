@@ -2,12 +2,12 @@
 
 namespace betterphp\utils;
 
-use PgSql\Connection;
+use PDO;
 
 class DBConnection
 {
     private static ?DBConnection $instance = null;
-    private Connection $connection;
+    private PDO $connection;
 
     public static function getInstance(): DBConnection
     {
@@ -20,20 +20,18 @@ class DBConnection
     private function __construct()
     {
         // get connection string from .env file
-        $envFilePath = dirname(__DIR__) . '/../src/.env';
+        $envFilePath = $_SERVER["DOCUMENT_ROOT"]. '/.env';
 
         $env = parse_ini_file($envFilePath);
 
-        $this->connection = pg_connect(
-            "host=" . $env['DB_HOST'] .
-            " port=" . $env['DB_PORT'] .
-            " dbname=" . $env['DB_NAME'] .
-            " user=" . $env['DB_USER'] .
-            " password=" . $env['DB_PASS']
+        $this->connection = new PDO(
+            "pgsql:host={$env['DB_HOST']};port={$env['DB_PORT']};dbname={$env['DB_NAME']}",
+            $env['DB_USER'],
+            $env['DB_PASS']
         );
     }
 
-    public function getConnection(): Connection
+    public function getConnection(): PDO
     {
         return $this->connection;
     }
