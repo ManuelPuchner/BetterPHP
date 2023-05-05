@@ -1,16 +1,21 @@
 #!/bin/bash
 
+ACCENT_COLOR="\033[0;36m"
+RESET_COLOR="\033[0m"
+ERROR_COLOR="\033[1;31m"
+
+
 # check if php is installed and has version >= 8.0
 if ! command -v php &> /dev/null
 then
-    echo "PHP could not be found"
+    echo -e "$ERROR_COLOR PHP could not be found$RESET_COLOR"
     exit
 fi
 
 
 if [[ $(php -r "echo version_compare(PHP_VERSION, '8.0.0');") == "-1" ]];
 then
-    echo "PHP version must be >= 8.0"
+    echo -e "$ERROR_COLOR PHP version must be >= 8.0$RESET_COLOR"
     exit
 fi
 
@@ -19,7 +24,7 @@ checkBetterphpInstallation()
 {
   # check if betterphp directory exists
   if [ ! -d "./betterphp" ]; then
-    echo "Betterphp is not installed. Please run 'betterphp install' to install it."
+    echo -e "$ERROR_COLOR Betterphp is not installed.$RESET_COLOR Please run 'betterphp install' to install it."
     exit
   fi
 }
@@ -29,7 +34,7 @@ checkDockerInstallation()
   # check if docker is installed
   if ! command -v docker &> /dev/null
   then
-      echo "Docker could not be found"
+      echo -e "$ERROR_COLOR Docker could not be found$RESET_COLOR"
       exit
   fi
 }
@@ -60,12 +65,12 @@ function installInotifyAwait() {
       elif command -v dnf >/dev/null 2>&1; then
         sudo dnf install -y inotify-tools
       else
-        echo "Error: Could not install inotify-tools. Unsupported package manager."
+        echo -e "$ERROR_COLOR Error: Could not install inotify-tools.$RESET_COLOR Unsupported package manager."
         exit 1
       fi
       ;;
     *)
-      echo "Error: Unsupported operating system."
+      echo -e "$ERROR_COLOR Error: Unsupported operating system."
       exit 1
       ;;
   esac
@@ -88,7 +93,7 @@ function installFswatch {
     # Install fswatch using Homebrew
     brew install fswatch
   else
-    echo "Error: Could not install fswatch. Homebrew is not installed."
+    echo -e "$ERROR_COLOR Error: Could not install fswatch.$RESET_COLOR Homebrew is not installed."
     exit 1
   fi
 }
@@ -97,7 +102,7 @@ function checkFswatchInstallation {
   # check if fswatch is installed
   if ! command -v fswatch &> /dev/null
   then
-      echo "fswatch could not be found"
+      echo -e "$ACCENT_COLOR fswatch could not be found$RESET_COLOR"
       echo "trying to install fswatch..."
       installFswatch
       exit
@@ -147,7 +152,7 @@ if [ "$ARG" == "dev" ]; then
     echo "Building application..."
     php ./betterphp/cli/index.php
 
-    echo "You can now access the application at http://localhost:8080"
+    echo -e "$ACCENT_COLOR You can now access the application at http://localhost:8080 $RESET_COLOR"
 
     echo "Watching for changes..."
     watchDirectoryAndRebuild "./src" "php ./betterphp/cli/index.php"
@@ -162,19 +167,19 @@ if [ "$ARG" == "dev" ]; then
       echo "Building application..."
       php ./betterphp/cli/index.php
 
-      echo "You can now access the application at http://localhost:8080"
+      echo "$ACCENT_COLOR" + "You can now access the application at http://localhost:8080 $RESET_COLOR"
 
       echo "Watching for changes..."
       watchDirectoryAndRebuild "./src" "php ./betterphp/cli/index.php"
 
     else
-      echo "Development environment could not be started."
+       echo -e "$ERROR_COLOR Development environment could not be started.$RESET_COLOR"
     fi
 
     exit;
   fi
   exit
 else
-  echo "No argument provided. Please run 'betterphp dev' to start the development server."
+  echo -e "$ERROR_COLOR No argument provided.$RESET_COLOR Please run 'betterphp dev' to start the development server."
   exit
 fi
