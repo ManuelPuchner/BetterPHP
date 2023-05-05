@@ -6,7 +6,7 @@
 - php 8.0
 ### download ``betterphp.sh``
 ````shell
-$ curl -O https://raw.githubusercontent.com/manuelpuchner/betterphp/main/install-betterphp.sh && chmod +x install-betterphp.sh
+$ curl -O https://raw.githubusercontent.com/ManuelPuchner/BetterPHP/main/install-betterphp.sh && chmod +x install-betterphp.sh
 ````
 
 ## How to use

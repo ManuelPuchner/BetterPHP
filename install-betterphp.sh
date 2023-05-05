@@ -41,6 +41,12 @@ rm -rf "$(basename "$download_url")"
 
 echo "BetterPHP app created."
 
+chmod +x betterphp-app/betterphp.sh
+
+touch betterphp-app/src/.env
+
+git init betterphp-app
+
 echo "Run 'cd betterphp-app' to enter the app folder."
 echo "Run './betterphp.sh dev' to start the development environment."
 
