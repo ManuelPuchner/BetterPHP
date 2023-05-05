@@ -24,3 +24,8 @@ Route::get('/test/{id}', function (int $id) {
         $data = CurrencyController::getInstance()->getById($id);
         return Response::ok('Hello World', $data);
 });
+
+
+Route::get('/hello', function () {
+        return Response::ok('Hello World', []);
+});

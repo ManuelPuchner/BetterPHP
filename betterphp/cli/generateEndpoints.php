@@ -6,6 +6,13 @@ $routes = Route::getRoutes();
 $ROOT = dirname(__DIR__);
 $baseApi = $ROOT . '/../dist/api';
 
+$rootFileContent = "<?php \n\n";
+$rootFileContent .= "echo 'Hello World';\n\n";
+$rootFileContent .= "?>";
+
+@mkdir($ROOT . '/../dist', 0777, true);
+file_put_contents($ROOT . '/../dist/index.php', $rootFileContent);
+
 foreach ($routes as $route) {
     $uri = $route['uri'];
 
