@@ -49,22 +49,56 @@ foreach ($models as $model) {
             foreach ($properties as $property) {
                 $columns[] = array(
                     'name' => $property->getName(),
-                    'type' => parseDocComment($property->getDocComment())
+                    'type' => parseDocComment($property->getDocComment(), '@SQL')
                 );
             }
 
 
-            $sql = 'CREATE TABLE IF NOT EXISTS ' . $tableName . ' (';
+            $sql = 'CREATE TABLE IF NOT EXISTS ' . $tableName . ' (' . "\n";
 
-            foreach ($columns as $column) {
-                $sql .= $column['name'] . ' ' . $column['type'] . ', ';
+            for ($i = 0; $i < count($columns); $i++) {
+                $column = $columns[$i];
+
+                $sql .= "\t" . $column['name'] . ' ' . $column['type'];
+
+                if ($i < count($columns) - 1) {
+                    $sql .= ',';
+                    $sql .= "\n";
+                }
             }
 
-            $sql = substr($sql, 0, -2);
-
-            $sql .= ');';
 
 
+            $tableConstraints = parseTableConstraints($reflection->getDocComment());
+
+            if(count($tableConstraints) > 0) {
+                $sql .= ',';
+                echo Color::get("\t\t" . 'Adding table constraints', Color::GREEN) . PHP_EOL;
+                echo Color::get("\t\t\t" . 'Constraints: ' . implode(', ', $tableConstraints), Color::GREEN) . PHP_EOL;
+
+                $sql .= "\n";
+
+                for ($i = 0; $i < count($tableConstraints); $i++) {
+                    $constraint = $tableConstraints[$i];
+
+                    $sql .= "\t" . $constraint;
+
+                    if ($i < count($tableConstraints) - 1) {
+                        $sql .= ',';
+                    }
+
+                    $sql .= "\n";
+                }
+            }
+
+
+            $sql .= "\n" . ');';
+
+
+
+
+
+            $oldContent = @file_get_contents($CREATE_SQL_FILE);
 
             if(file_exists($CREATE_SQL_FILE)) {
                 unlink($CREATE_SQL_FILE);
@@ -72,7 +106,9 @@ foreach ($models as $model) {
 
             @mkdir(dirname($CREATE_SQL_FILE), 0777, true);
 
-            file_put_contents($CREATE_SQL_FILE, $sql . PHP_EOL, FILE_APPEND);
+            $data = $oldContent . PHP_EOL . $sql . PHP_EOL;
+
+            file_put_contents($CREATE_SQL_FILE, $data, FILE_APPEND);
         }
 
     } catch (ReflectionException $e) {
@@ -80,8 +116,7 @@ foreach ($models as $model) {
     }
 }
 
-
-function parseDocComment($docComment): string
+function parseDocComment($docComment, $valueToSearch): string
 {
     $output = array();
 
@@ -96,12 +131,43 @@ function parseDocComment($docComment): string
         // remove any leading spaces and asterisks
         $line = trim($line, " *\t");
 
-        // check if the line starts with "@SQL"
-        if (str_starts_with($line, "@SQL")) {
-            // extract the contents after "@SQL"
-            $output[] = trim(substr($line, 4));
+        // check if the line starts with $valueToSearch
+        if (str_starts_with($line, $valueToSearch)) {
+            // remove the $valueToSearch from the line
+            $line = substr($line, strlen($valueToSearch));
+
+            // remove any leading spaces and asterisks
+            $line = trim($line, " *\t");
+
+            // add the line to the output
+            $output[] = $line;
         }
     }
 
     return implode(' ', $output);
+}
+
+
+function parseTableConstraints(string $doccommentTableConstraints): array
+{
+    $doccommentTableConstraintsRows = explode("\n", $doccommentTableConstraints);
+
+    $doccommentTableConstraintsRows = str_replace('/**', '', $doccommentTableConstraintsRows);
+    $doccommentTableConstraintsRows = str_replace('*/', '', $doccommentTableConstraintsRows);
+    $doccommentTableConstraintsRows = str_replace('*', '', $doccommentTableConstraintsRows);
+
+    $doccommentTableConstraintsRows = array_map('trim', $doccommentTableConstraintsRows);
+
+    $doccommentTableConstraintsRows = array_filter($doccommentTableConstraintsRows, function($row) {
+        return !empty($row);
+    });
+
+    $doccommentTableConstraints = array();
+
+    foreach ($doccommentTableConstraintsRows as $row) {
+        $row = parseDocComment("/** " .$row." */", '@TABLE_CONSTRAINT');
+        $doccommentTableConstraints[] = $row;
+    }
+
+    return $doccommentTableConstraints;
 }

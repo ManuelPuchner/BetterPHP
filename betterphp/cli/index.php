@@ -3,8 +3,8 @@
 use betterphp\cmd\Color;
 use betterphp\utils\Route;
 
-require_once '../utils/Route.php';
-require_once 'Color.php';
+require_once dirname(__DIR__) . '/utils/Route.php';
+require_once dirname(__DIR__) . '/cli/Color.php';
 
 
 $CONTROLLER_DIR = dirname(__DIR__) . '/src/controller';
@@ -71,18 +71,18 @@ foreach ($routes as $route) {
     echo "\t" . $route['method'] . ' ' . $route['uri'] . PHP_EOL;
 }
 
-require_once './generateEndpoints.php';
+require_once dirname(__DIR__) . '/cli/generateEndpoints.php';
 
 
 
 
 // generate htaccess rewrite rules
-require_once './generateHtaccess.php';
+require_once dirname(__DIR__) . '/cli/generateHtaccess.php';
 
 
 // copy files
-require_once './copyFiles.php';
+require_once dirname(__DIR__) . '/cli/copyFiles.php';
 
 // copy env
-require_once './copyEnv.php';
+require_once dirname(__DIR__) . '/cli/copyEnv.php';
 
