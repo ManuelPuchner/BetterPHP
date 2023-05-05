@@ -11,3 +11,4 @@ curl -L "$download_url" -o "$(basename "$download_url")"
 
 # Extract the downloaded tarball (optional)
 tar -xvf "$(basename "$download_url")"
+
