@@ -5,6 +5,8 @@ repo="BetterPHP"
 owner="ManuelPuchner"
 
 
+echo "Downloading BetterPHP..."
+
 # Get the latest release information
 release=$(curl -s "https://api.github.com/repos/$owner/$repo/releases/latest")
 
@@ -15,9 +17,15 @@ echo $download_url
 # Download the asset to the current directory
 curl -L "$download_url" -o "$(basename "$download_url")"
 
+echo "Download complete."
+echo "Extracting BetterPHP..."
 
 # Extract the downloaded tarball (optional)
 tar -xvf "$(basename "$download_url")"
+
+echo "Extraction complete."
+
+echo "Creating betterphp-app"
 
 # generate folder for the app
 mkdir -p betterphp-app
@@ -30,4 +38,9 @@ rm -rf ManuelPuchner-BetterPHP-*
 
 # remove tarball
 rm -rf "$(basename "$download_url")"
+
+echo "BetterPHP app created."
+
+echo "Run 'cd betterphp-app' to enter the app folder."
+echo "Run './betterphp.sh dev' to start the development environment."
 
