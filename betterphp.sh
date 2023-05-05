@@ -181,6 +181,15 @@ if [ "$ARG" == "dev" ]; then
     exit;
   fi
   exit
+elif [ "$ARG" == "db" ]; then
+    DB_ARG=$2
+
+    if [ "$DB_ARG" == "generate" ]; then
+        echo "Generating create statements..."
+        php ./betterphp/cli/generateTables.php
+        echo -e "$ACCENT_COLOR Done.$RESET_COLOR"
+        exit
+    fi
 else
   echo -e "$ERROR_COLOR No argument provided.$RESET_COLOR Please run 'betterphp dev' to start the development server."
   exit

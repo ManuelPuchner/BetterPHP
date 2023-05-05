@@ -13,32 +13,15 @@ $ curl -O https://raw.githubusercontent.com/ManuelPuchner/BetterPHP/main/install
 $ ./install-betterphp.sh
 ````
 
-
 ## How to use
-### Create the dev environment
-- creates the following containers
-  - web (apache server http://localhost:8080)
-  - postgres (database)
-  - pgadmin (database admin tool http://localhost:8090)
+### Start dev environment
 ````shell
-$ docker compose -f docker-compose-dev-environment.yaml up [-d]
+$ ./betterphp.sh dev
 ````
 
-### Create create-script
+### Create create.sql file
 ````shell
-$ php betterphp/cli/generateTables.php 
-````
-
-### Generate the api
-- by running the command you will generate the api in the `dist` folder
-````shell
-$ php betterphp/cli/index.php 
-````
-
-### Generate create table statements
-- by running the command you will generate the create table statements in the `dist` folder
-````shell
-$ php betterphp/cli/generateTables.php 
+$ ./betterphp.sh db generate
 ````
 
 ### Create a .env file
