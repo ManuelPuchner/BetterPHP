@@ -1,13 +1,18 @@
 # BetterPHP
 
-## Installation
-### Requirements
+## Requirements
 - docker
 - php 8.0
-### download ``betterphp.sh``
+## Installation
+### Download ``install-betterphp.sh``
 ````shell
 $ curl -O https://raw.githubusercontent.com/ManuelPuchner/BetterPHP/main/install-betterphp.sh && chmod +x install-betterphp.sh
 ````
+### Run ``install-betterphp.sh``
+````shell
+$ ./install-betterphp.sh
+````
+
 
 ## How to use
 ### Create the dev environment
