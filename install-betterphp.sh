@@ -50,6 +50,6 @@ touch betterphp-app/src/.env
 
 git init betterphp-app
 
-echo "Run $ACCENT_COLOR'cd betterphp-app'$RESET_COLOR to enter the app folder."
-echo "Run $ACCENT_COLOR'./betterphp.sh dev'$RESET_COLOR to start the development environment."
+echo -e "Run $ACCENT_COLOR'cd betterphp-app'$RESET_COLOR to enter the app folder."
+echo -e "Run $ACCENT_COLOR'./betterphp.sh dev'$RESET_COLOR to start the development environment."
 
