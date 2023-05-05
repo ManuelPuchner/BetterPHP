@@ -9,7 +9,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Create Release Folder
-        run: rsync -arv --exclude='.git/' --exclude='.github/' --exclude='.gitignore' . ./release
+        run: rsync -arv --exclude='install-betterphp.sh' --exclude='.git/' --exclude='.github/' --exclude='.gitignore' . ./release
       - name: Switch to Release Folder
         run: |
           cd release
