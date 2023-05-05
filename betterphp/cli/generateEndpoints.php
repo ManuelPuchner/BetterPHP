@@ -140,7 +140,7 @@ function callableToString(callable $callable) : string {
         $temp =  'function ' . $methodSignature . ' {' . PHP_EOL;
         $temp .= "\ttry {" . PHP_EOL;
         $temp .= "\t" .  $body . PHP_EOL;
-        $temp .= "\t} catch (Exception \$e) {" . PHP_EOL;
+        $temp .= "\t} catch (ApiException \$e) {" . PHP_EOL;
         $temp .= "\t\treturn new Response(\$e->getCode(), \$e->getMessage());" . PHP_EOL;
         $temp .= "\t}" . PHP_EOL;
         $temp .= "};" . PHP_EOL;
@@ -184,11 +184,13 @@ use betterphp\utils\Response;
 use controller\CurrencyController;
 use betterphp\utils\DBConnection;
 use model\Currency;
+use betterphp\utils\ApiException;
 
 require_once " . "\$_SERVER['DOCUMENT_ROOT']  . '" . "/controller/CurrencyController.php';
 require_once " . "\$_SERVER['DOCUMENT_ROOT']  . '" . "/../betterphp/utils/Response.php';
 require_once " . "\$_SERVER['DOCUMENT_ROOT']  . '" . "/../betterphp/utils/DBConnection.php';
 require_once " . "\$_SERVER['DOCUMENT_ROOT']  . '" . "/model/Currency.php';
+require_once " . "\$_SERVER['DOCUMENT_ROOT']  . '" . "/../betterphp/utils/ApiException.php';
 
     " . PHP_EOL;
 }

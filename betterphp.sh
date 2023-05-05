@@ -122,6 +122,7 @@ function watchDirectoryAndRebuild() {
         # Run the command when a file is modified
         echo "Running $COMMAND_TO_RUN on $file"
         eval "$COMMAND_TO_RUN $path$file"
+        echo -e "$ACCENT_COLOR" + "You can now access the application at http://localhost:8080 $RESET_COLOR"
       done
   else
     checkInotifywaitInstallation
@@ -132,6 +133,7 @@ function watchDirectoryAndRebuild() {
         if [[ "$file" != *.swp ]]; then  # Ignore Vim swap files
           echo "Running $COMMAND_TO_RUN on $file"
           eval "$COMMAND_TO_RUN $DIR_TO_WATCH/$file"
+          echo -e "$ACCENT_COLOR" + "You can now access the application at http://localhost:8080 $RESET_COLOR"
         fi
       done
   fi
@@ -167,7 +169,7 @@ if [ "$ARG" == "dev" ]; then
       echo "Building application..."
       php ./betterphp/cli/index.php
 
-      echo "$ACCENT_COLOR" + "You can now access the application at http://localhost:8080 $RESET_COLOR"
+      echo -e "$ACCENT_COLOR" + "You can now access the application at http://localhost:8080 $RESET_COLOR"
 
       echo "Watching for changes..."
       watchDirectoryAndRebuild "./src" "php ./betterphp/cli/index.php"

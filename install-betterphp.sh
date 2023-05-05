@@ -50,10 +50,7 @@ touch betterphp-app/src/.env
 
 git init betterphp-app
 
-echo "/dist
-      */*.env
-      /db-postgres-betterphp
-" >> betterphp-app/.gitignore
+echo -e "/dist\n*/*.env\n/db-postgres-betterphp" >> betterphp-app/.gitignore
 
 echo -e "Run $ACCENT_COLOR'cd betterphp-app'$RESET_COLOR to enter the app folder."
 echo -e "Run $ACCENT_COLOR'./betterphp.sh dev'$RESET_COLOR to start the development environment."
