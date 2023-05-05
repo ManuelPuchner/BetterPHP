@@ -3,6 +3,7 @@
 namespace controller;
 
 use betterphp\utils\Controller;
+use betterphp\utils\HttpErrorCodes;
 use Exception;
 use model\Currency;
 
@@ -44,7 +45,7 @@ class CurrencyController extends Controller
         $stmt->execute(['id' => $id]);
         $row = $stmt->fetch();
         if (!$row) {
-            throw new Exception('Currency not found', HttpErrorCodes::HTTP_NOT_FOUND);
+            throw new Exception('Currency not found', HTTPErrorCodes::HTTP_NOT_FOUND);
         }
         return Currency::getFromRow($row);
     }

@@ -163,7 +163,7 @@ function getParamsCountFromRequestURI(string $uri) : int {
     $uri = explode('/', $uri);
     $count = 0;
     foreach ($uri as $part) {
-        if(strpos($part, '{') !== false) {
+        if(str_contains($part, '{')) {
             $count++;
         }
     }
