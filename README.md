@@ -30,13 +30,13 @@ $ ./betterphp.sh db generate
 - set the database credentials
 
 ## How to write the api
-### controller
+### model
 - create a model in the `src/model` folder
    - the model must extend the 'Entity' class
      ```php
         use betterphp\utils\Entity;
         require_once dirname(__DIR__) . '/../betterphp/utils/Entity.php';
-      ``
+     ```
    - the model already includes the id column
    - for the automatic creation of the `create.sql` file
      - write table constraints like this
@@ -52,7 +52,7 @@ $ ./betterphp.sh db generate
         /** @SQL bigserial NOT NULL PRIMARY KEY*/
         protected int $id;
         ```
-
+### controller
 - create a controller in the `src/controller` folder
    - the controller must extend the `Controller` class
      ```php
@@ -67,6 +67,7 @@ $ ./betterphp.sh db generate
         throw new Exception('Not found', HttpErrorCodes::NOT_FOUND);
       ```
 
+### service
 - create a service to write api endpoints
    - multiple routes can be defined for one service
    - the controller instance must be defined in the function
