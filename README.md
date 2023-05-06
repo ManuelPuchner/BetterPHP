@@ -34,7 +34,7 @@ $ ./betterphp.sh db generate
 - create a model in the `src/model` folder
    - the model must extend the 'Entity' class
      ```php
-        use betterphp\utils\Entity;
+
         require_once dirname(__DIR__) . '/../betterphp/utils/Entity.php';
      ```
    - the model already includes the id column
