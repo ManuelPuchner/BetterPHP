@@ -1,7 +1,7 @@
 <?php
 
 use betterphp\cmd\Color;
-use betterphp\utils\Entity;
+use service\orm\Entity;
 
 require_once __DIR__ . '/Color.php';
 

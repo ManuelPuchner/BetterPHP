@@ -2,11 +2,13 @@
 
 namespace betterphp\utils;
 
+use Attribute;
 use PDO;
 
 require_once __DIR__ . '/DBConnection.php';
 
-abstract class Controller
+#[Attribute(Attribute::TARGET_CLASS)]
+class Controller
 {
     private static ?Controller $instance = null;
     private static PDO $connection;
