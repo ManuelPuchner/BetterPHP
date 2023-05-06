@@ -4,7 +4,7 @@ use betterphp\cmd\Color;
 use betterphp\utils\Route;
 
 require_once dirname(__DIR__) . '/utils/Route.php';
-require_once dirname(__DIR__) . '/cli/Color.php';
+require_once dirname(__DIR__) . '/cli-old/Color.php';
 
 
 $CONTROLLER_DIR = dirname(__DIR__) . '/src/controller';
@@ -75,14 +75,14 @@ foreach ($routes as $route) {
 
 
 // copy files
-require_once dirname(__DIR__) . '/cli/copyFiles.php';
+require_once dirname(__DIR__) . '/cli-old/copyFiles.php';
 
 // generate endpoints
-require_once dirname(__DIR__) . '/cli/generateEndpoints.php';
+require_once dirname(__DIR__) . '/cli-old/generateEndpoints.php';
 
 // copy env
-require_once dirname(__DIR__) . '/cli/copyEnv.php';
+require_once dirname(__DIR__) . '/cli-old/copyEnv.php';
 
 // generate htaccess rewrite rules
-require_once dirname(__DIR__) . '/cli/generateHtaccess.php';
+require_once dirname(__DIR__) . '/cli-old/generateHtaccess.php';
 

@@ -152,7 +152,7 @@ if [ "$ARG" == "dev" ]; then
   if checkDevContainersRunning; then
     echo "Development environment is already running."
     echo "Building application..."
-    php ./betterphp/cli/index.php
+    php ./betterphp/cli-old/index.php
 
     echo -e "$ACCENT_COLOR You can now access the application at http://localhost:8080 $RESET_COLOR"
 
@@ -167,7 +167,7 @@ if [ "$ARG" == "dev" ]; then
     if checkDevContainersRunning; then
       echo "Development environment started successfully."
       echo "Building application..."
-      php ./betterphp/cli/index.php
+      php ./betterphp/cli-old/index.php
 
       echo -e "$ACCENT_COLOR" + "You can now access the application at http://localhost:8080 $RESET_COLOR"
 
@@ -187,7 +187,7 @@ elif [ "$ARG" == "db" ]; then
     if [ "$DB_ARG" == "generate" ]; then
         echo "Generating create statements..."
         rm -rf ./dist/sql/create.sql
-        php ./betterphp/cli/generateTables.php
+        php ./betterphp/cli-old/generateTables.php
         echo -e "$ACCENT_COLOR Done.$RESET_COLOR"
         exit
     else

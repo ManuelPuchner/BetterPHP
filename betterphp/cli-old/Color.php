@@ -1,7 +1,7 @@
 <?php
 
 // ansii color codes
-namespace betterphp\cli;
+namespace betterphp\cmd;
 class Color
 {
     const RED = "\033[0;31m";

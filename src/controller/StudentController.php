@@ -3,8 +3,9 @@
 namespace controller;
 
 use betterphp\utils\Controller;
+use betterphp\utils\Inject;
 use PDO;
-use service\Inject;
+
 
 #[Controller]
 class StudentController
