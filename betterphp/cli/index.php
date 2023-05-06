@@ -73,18 +73,16 @@ foreach ($routes as $route) {
     echo "\t" . $route['method'] . ' ' . $route['uri'] . PHP_EOL;
 }
 
-require_once dirname(__DIR__) . '/cli/generateEndpoints.php';
-
-
-
-
-// generate htaccess rewrite rules
-require_once dirname(__DIR__) . '/cli/generateHtaccess.php';
-
 
 // copy files
 require_once dirname(__DIR__) . '/cli/copyFiles.php';
 
+// generate endpoints
+require_once dirname(__DIR__) . '/cli/generateEndpoints.php';
+
 // copy env
 require_once dirname(__DIR__) . '/cli/copyEnv.php';
+
+// generate htaccess rewrite rules
+require_once dirname(__DIR__) . '/cli/generateHtaccess.php';
 

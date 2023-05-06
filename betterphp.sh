@@ -186,8 +186,12 @@ elif [ "$ARG" == "db" ]; then
 
     if [ "$DB_ARG" == "generate" ]; then
         echo "Generating create statements..."
+        rm -rf ./dist/sql/create.sql
         php ./betterphp/cli/generateTables.php
         echo -e "$ACCENT_COLOR Done.$RESET_COLOR"
+        exit
+    else
+        echo -e "$ERROR_COLOR No argument provided.$RESET_COLOR Please run 'betterphp db generate' to generate create statements."
         exit
     fi
 else

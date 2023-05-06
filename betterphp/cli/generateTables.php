@@ -53,8 +53,9 @@ foreach ($models as $model) {
                 );
             }
 
+            $sql = "DROP TABLE IF EXISTS $tableName;\n\n";
 
-            $sql = 'CREATE TABLE IF NOT EXISTS ' . $tableName . ' (' . "\n";
+            $sql .= 'CREATE TABLE IF NOT EXISTS ' . $tableName . ' (' . "\n";
 
             for ($i = 0; $i < count($columns); $i++) {
                 $column = $columns[$i];

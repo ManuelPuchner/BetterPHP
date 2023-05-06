@@ -8,7 +8,8 @@ require_once dirname(__DIR__) . '/../betterphp/utils/Entity.php';
 
 
 /**
- * @TABLE_CONSTRAINT CONSTRAINT portfolio_pk PRIMARY KEY (id)
+ * @TABLE_CONSTRAINT CONSTRAINT portfolio_fk FOREIGN KEY (portfolio_id) REFERENCES portfolio(id)
+ * @TABLE_CONSTRAINT CONSTRAINT currency_unique UNIQUE (name, code)
  */
 class Currency extends Entity
 {
@@ -18,6 +19,9 @@ class Currency extends Entity
 
     /** @SQL varchar(4)*/
     private string $code;
+
+    /** @SQL bigserial */
+    private int $portfolio_id;
 
 
     public function __construct(int $id, string $name, string $code)

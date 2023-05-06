@@ -2,6 +2,7 @@
 
 namespace service;
 
+use betterphp\utils\Body;
 use betterphp\utils\Response;
 use betterphp\utils\Route;
 use controller\CurrencyController;

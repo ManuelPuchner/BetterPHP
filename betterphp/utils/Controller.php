@@ -11,7 +11,7 @@ abstract class Controller
     private static ?Controller $instance = null;
     private static PDO $connection;
 
-    public static function getInstance(): Controller
+    public static function getInstance(): static
     {
         if (is_null(self::$instance)) {
             self::$instance = new static();

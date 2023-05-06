@@ -179,18 +179,36 @@ function getParamsCountFromRequestURI(string $uri) : int {
 
 function getRequires(): string
 {
-    return "
-use betterphp\utils\Response;
-use controller\CurrencyController;
-use betterphp\utils\DBConnection;
-use model\Currency;
-use betterphp\utils\ApiException;
+    $controllers = scandir(dirname(__DIR__) . '/../dist/controller');
+    $controllers = array_diff($controllers, ['.', '..']);
 
-require_once " . "\$_SERVER['DOCUMENT_ROOT']  . '" . "/controller/CurrencyController.php';
+    $models = scandir(dirname(__DIR__) . '/../dist/model');
+    $models = array_diff($models, ['.', '..']);
+
+    $requires = '';
+    $requires .= "use betterphp\utils\Response;" . PHP_EOL;
+    $requires .= "use betterphp\utils\ApiException;" . PHP_EOL;
+    $requires .= "use betterphp\utils\DBConnection;" . PHP_EOL;
+
+    foreach ($controllers as $controller) {
+        $requires .= "use controller\\" . str_replace('.php', '', $controller) . ";" . PHP_EOL;
+    }
+    foreach ($models as $model) {
+        $requires .= "use model\\" . str_replace('.php', '', $model) . ";" . PHP_EOL;
+    }
+    foreach ($controllers as $controller) {
+        $requires .= "require_once " . "\$_SERVER['DOCUMENT_ROOT']  . '" . "/controller/" . $controller . "';" . PHP_EOL;
+    }
+    foreach ($models as $model) {
+        $requires .= "require_once " . "\$_SERVER['DOCUMENT_ROOT']  . '" . "/model/" . $model . "';" . PHP_EOL;
+    }
+
+
+    $requires .=  "
 require_once " . "\$_SERVER['DOCUMENT_ROOT']  . '" . "/../betterphp/utils/Response.php';
 require_once " . "\$_SERVER['DOCUMENT_ROOT']  . '" . "/../betterphp/utils/DBConnection.php';
-require_once " . "\$_SERVER['DOCUMENT_ROOT']  . '" . "/model/Currency.php';
 require_once " . "\$_SERVER['DOCUMENT_ROOT']  . '" . "/../betterphp/utils/ApiException.php';
-
     " . PHP_EOL;
+
+    return $requires;
 }
