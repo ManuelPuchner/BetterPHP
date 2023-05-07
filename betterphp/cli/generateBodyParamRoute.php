@@ -1,6 +1,6 @@
 <?php
 
-use betterphp\utils\BodyParam;
+use betterphp\utils\atrributes\BodyParam;
 
 function generateBodyParamRoute($filePath, ReflectionMethod $reflection, string $httpMethod): void
 {

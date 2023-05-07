@@ -187,7 +187,7 @@ elif [ "$ARG" == "db" ]; then
     if [ "$DB_ARG" == "generate" ]; then
         echo "Generating create statements..."
         rm -rf ./dist/sql/create.sql
-        php ./betterphp/cli/generateTables.php
+        php ./betterphp/cli/orm/generateTables.php
         echo -e "$ACCENT_COLOR Done.$RESET_COLOR"
         exit
     else

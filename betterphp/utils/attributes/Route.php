@@ -1,8 +1,7 @@
 <?php
 
-namespace betterphp\utils;
+namespace betterphp\utils\attributes;
 use Attribute;
-use Exception;
 
 
 #[Attribute(Attribute::TARGET_METHOD)]

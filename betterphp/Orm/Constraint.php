@@ -1,11 +1,11 @@
 <?php
 
-namespace betterphp\utils;
+namespace betterphp\Orm;
 
 use Attribute;
 
 #[Attribute(Attribute::TARGET_CLASS)]
-class Service
+abstract class Constraint
 {
 
 }

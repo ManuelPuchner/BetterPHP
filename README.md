@@ -56,7 +56,7 @@ $ ./betterphp.sh db generate
 - create a controller in the `src/controller` folder
    - the controller must extend the `Controller` class
      ```php
-        use betterphp\utils\Controller;
+
         require_once dirname(__DIR__) . '/../betterphp/utils/Controller.php';
       ```
    - by throwing an exception you can send a http error code to the client

@@ -13,6 +13,7 @@ class Entity
         $this->tablename = $tablename;
     }
 
+
     public function getTablename(): string {
         return $this->tablename;
     }

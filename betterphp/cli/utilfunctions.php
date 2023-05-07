@@ -1,11 +1,48 @@
 <?php
 
 use betterphp\cli\RouteType;
-use betterphp\utils\GET;
-use betterphp\utils\PathParam;
-use betterphp\utils\POST;
-use betterphp\utils\QueryParam;
-use betterphp\utils\BodyParam;
+use betterphp\utils\attributes\BodyParam;
+use betterphp\utils\attributes\GET;
+use betterphp\utils\attributes\PathParam;
+use betterphp\utils\attributes\POST;
+use betterphp\utils\attributes\QueryParam;
+
+
+function deleteDirRecursively(string $dir): void
+{
+    if (!is_dir($dir)) {
+        return;
+    }
+
+    foreach (scandir($dir) as $filename) {
+        if ($filename[0] === '.') continue;
+        $filePath = $dir . '/' . $filename;
+        if (is_dir($filePath)) {
+            deleteDirRecursively($filePath);
+        } else {
+            unlink($filePath);
+        }
+    }
+
+    rmdir($dir);
+}
+
+function scanAllDir($dir): array
+{
+    $result = [];
+    foreach(scandir($dir) as $filename) {
+        if ($filename[0] === '.') continue;
+        $filePath = $dir . '/' . $filename;
+        if (is_dir($filePath)) {
+            foreach (scanAllDir($filePath) as $childFilename) {
+                $result[] = $filename . '/' . $childFilename;
+            }
+        } else {
+            $result[] = $filename;
+        }
+    }
+    return $result;
+}
 
 function getHttpMethod(ReflectionMethod $reflection): string {
     $attributes = $reflection->getAttributes();
@@ -163,6 +200,21 @@ function getClassAttribute(ReflectionClass $reflection, $attributeClass): Reflec
  * @throws ReflectionException
  */
 function getMethodAttribute(ReflectionMethod $reflection, string $attributeClass): ReflectionAttribute|false {
+    $attributes = $reflection->getAttributes();
+    $classToFind = new ReflectionClass($attributeClass);
+    foreach ($attributes as $attribute) {
+        $attributeClass = $attribute->newInstance();
+        if ($attributeClass::class === $classToFind->getName()) {
+            return $attribute;
+        }
+    }
+    return false;
+}
+
+/**
+ * @throws ReflectionException
+ */
+function getPropertyAttribute(ReflectionProperty $reflection, string $attributeClass): ReflectionAttribute|false {
     $attributes = $reflection->getAttributes();
     $classToFind = new ReflectionClass($attributeClass);
     foreach ($attributes as $attribute) {

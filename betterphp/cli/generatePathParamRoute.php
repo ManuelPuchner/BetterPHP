@@ -1,7 +1,7 @@
 <?php
 
-use betterphp\utils\PathParam;
-use betterphp\utils\Route;
+use betterphp\utils\attributes\PathParam;
+use betterphp\utils\attributes\Route;
 
 /**
  * @throws ReflectionException

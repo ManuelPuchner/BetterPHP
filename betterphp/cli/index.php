@@ -3,36 +3,29 @@
 
 use betterphp\cli\Color;
 use betterphp\cli\RouteType;
-use betterphp\utils\BodyParam;
-use betterphp\utils\Controller;
 use betterphp\Orm;
-use betterphp\utils\GET;
-use betterphp\utils\PathParam;
-use betterphp\utils\QueryParam;
-use betterphp\utils\POST;
-use betterphp\utils\Route;
-use betterphp\utils\Service;
-use betterphp\utils\Getter;
-use betterphp\utils\Setter;
+use betterphp\utils\attributes\Controller;
+use betterphp\utils\attributes\QueryParam;
+use betterphp\utils\attributes\Route;
+use betterphp\utils\attributes\Service;
 
 
 require_once dirname(__DIR__) . '/Orm/Entity.php';
 require_once dirname(__DIR__) . '/Orm/Column.php';
 require_once dirname(__DIR__) . '/Orm/PrimaryKey.php';
 require_once dirname(__DIR__) . '/Orm/AutoIncrement.php';
-require_once dirname(__DIR__) . '/utils/Inject.php';
-require_once dirname(__DIR__) . '/utils/Controller.php';
-require_once dirname(__DIR__) . '/utils/Service.php';
-require_once dirname(__DIR__) . '/utils/GET.php';
-require_once dirname(__DIR__) . '/utils/POST.php';
-require_once dirname(__DIR__) . '/utils/Getter.php';
-require_once dirname(__DIR__) . '/utils/Setter.php';
-require_once dirname(__DIR__) . '/utils/Route.php';
+require_once dirname(__DIR__) . '/utils/attributes/Controller.php';
+require_once dirname(__DIR__) . '/utils/attributes/Service.php';
+require_once dirname(__DIR__) . '/utils/attributes/GET.php';
+require_once dirname(__DIR__) . '/utils/attributes/POST.php';
+require_once dirname(__DIR__) . '/utils/attributes/Getter.php';
+require_once dirname(__DIR__) . '/utils/attributes/Setter.php';
+require_once dirname(__DIR__) . '/utils/attributes/Route.php';
 require_once dirname(__DIR__) . '/cli/Color.php';
 require_once dirname(__DIR__) . '/cli/RouteType.php';
-require_once dirname(__DIR__) . '/utils/PathParam.php';
-require_once dirname(__DIR__) . '/utils/QueryParam.php';
-require_once dirname(__DIR__) . '/utils/BodyParam.php';
+require_once dirname(__DIR__) . '/utils/attributes/PathParam.php';
+require_once dirname(__DIR__) . '/utils/attributes/QueryParam.php';
+require_once dirname(__DIR__) . '/utils/attributes/BodyParam.php';
 
 
 require_once dirname(__DIR__) . '/cli/htaccess.php';
@@ -42,41 +35,7 @@ require_once dirname(__DIR__) . '/cli/generateNormalRoute.php';
 require_once dirname(__DIR__) . '/cli/generatePathParamRoute.php';
 require_once dirname(__DIR__) . '/cli/generateBodyParamRoute.php';
 
-function deleteDirRecursively(string $dir): void
-{
-    if (!is_dir($dir)) {
-        return;
-    }
 
-    foreach (scandir($dir) as $filename) {
-        if ($filename[0] === '.') continue;
-        $filePath = $dir . '/' . $filename;
-        if (is_dir($filePath)) {
-            deleteDirRecursively($filePath);
-        } else {
-            unlink($filePath);
-        }
-    }
-
-    rmdir($dir);
-}
-
-function scanAllDir($dir): array
-{
-    $result = [];
-    foreach(scandir($dir) as $filename) {
-        if ($filename[0] === '.') continue;
-        $filePath = $dir . '/' . $filename;
-        if (is_dir($filePath)) {
-            foreach (scanAllDir($filePath) as $childFilename) {
-                $result[] = $filename . '/' . $childFilename;
-            }
-        } else {
-            $result[] = $filename;
-        }
-    }
-    return $result;
-}
 
 $SRC_DIR = dirname(__DIR__) . '/../src';
 $API_DIR = dirname(__DIR__) . '/../dist/api';

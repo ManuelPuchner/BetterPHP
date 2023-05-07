@@ -3,21 +3,16 @@
 namespace controller;
 
 use betterphp\utils\Controller;
-use betterphp\utils\DBConnection;
-use betterphp\utils\Inject;
+use PDO;
 
+require_once dirname(__DIR__) . '/../betterphp/utils/Controller.php';
 
-#[Controller]
-class StudentController
+class StudentController extends Controller
 {
-    #[Inject]
-    private DBConnection $connection;
-
     public function getStudents(): array
     {
-        $sql = 'SELECT * FROM students';
-        $stmt = $this->connection->prepare($sql);
-        $stmt->execute();
-        return $stmt->fetchAll();
+        $query = $this->getConnection()->prepare('SELECT * FROM student');
+        $query->execute();
+        return $query->fetchAll(PDO::FETCH_ASSOC);
     }
 }

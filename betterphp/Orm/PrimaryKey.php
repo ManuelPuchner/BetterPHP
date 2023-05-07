@@ -4,7 +4,10 @@ namespace betterphp\Orm;
 
 use Attribute;
 
-#[Attribute] class PrimaryKey
+require_once __DIR__.'/Constraint.php';
+
+#[Attribute]
+class PrimaryKey extends Constraint
 {
 
 }

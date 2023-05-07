@@ -1,11 +1,11 @@
 <?php
 
-namespace betterphp\utils;
+namespace betterphp\utils\attributes;
 
 use Attribute;
 
 #[Attribute(Attribute::TARGET_PARAMETER)]
-class PathParam
+class BodyParam
 {
 
 }

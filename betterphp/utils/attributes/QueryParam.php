@@ -1,6 +1,6 @@
 <?php
 
-namespace betterphp\utils;
+namespace betterphp\utils\attributes;
 
 use Attribute;
 
