@@ -3,15 +3,15 @@
 namespace controller;
 
 use betterphp\utils\Controller;
+use betterphp\utils\DBConnection;
 use betterphp\utils\Inject;
-use PDO;
 
 
 #[Controller]
 class StudentController
 {
     #[Inject]
-    private PDO $connection;
+    private DBConnection $connection;
 
     public function getStudents(): array
     {
