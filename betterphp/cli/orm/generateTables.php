@@ -62,6 +62,15 @@ foreach ($allSrcFiles as $srcFile) {
                             $columnType = 'bigserial';
                         }
 
+                        echo "\t\tType: " . Color::get($columnType, Color::GREEN) . PHP_EOL;
+
+                        if($columnConstraint) {
+                            echo "\t\tConstraint: " . Color::get($columnConstraint, Color::GREEN) . PHP_EOL;
+                        } else {
+                            echo "\t\tConstraint: " . Color::get('None', Color::YELLOW) . PHP_EOL;
+                        }
+
+
                         $columns[] = [
                             'name' => $columnName,
                             'type' => $columnType,
@@ -114,7 +123,6 @@ foreach ($allSrcFiles as $srcFile) {
  */
 function getTypeFromProperty(ReflectionProperty $reflectionProperty): string
 {
-    echo "\t\tGetting type" . PHP_EOL;
     $setType = getPropertyAttribute($reflectionProperty, Orm\Column::class)->newInstance()->getType();
     if($setType) {
         return $setType;
@@ -125,7 +133,6 @@ function getTypeFromProperty(ReflectionProperty $reflectionProperty): string
 
 function getColumnConstraintFromProperty(ReflectionProperty $property): string
 {
-    echo "\t\tGetting constraints" . PHP_EOL;
     $constraints = [];
     $propertyAttributes = $property->getAttributes();
     foreach ($propertyAttributes as $propertyAttribute) {
