@@ -10,7 +10,7 @@ use betterphp\Orm\Entity;
 class Student {
     #[Column([
         'name' => 'id',
-        'type' => 'int'
+        'type' => 'BIGINT',
     ])]
     #[Orm\PrimaryKey]
     #[Orm\AutoIncrement]

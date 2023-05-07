@@ -56,7 +56,13 @@ foreach ($allSrcFiles as $srcFile) {
                         $columnType = getTypeFromProperty($property);
                         $columnConstraint = getColumnConstraintFromProperty($property);
 
-                        if($columnType === 'INT' && str_contains($columnConstraint, 'AUTO_INCREMENT')) {
+                        if(strtoupper($columnType) === 'INT' && str_contains($columnConstraint, 'AUTO_INCREMENT')) {
+                            $columnConstraint = str_replace('AUTO_INCREMENT', '', $columnConstraint);
+                            $columnConstraint = trim($columnConstraint);
+                            $columnType = 'serial';
+                        }
+
+                        if(strtoupper($columnType) === 'BIGINT' && str_contains($columnConstraint, 'AUTO_INCREMENT')) {
                             $columnConstraint = str_replace('AUTO_INCREMENT', '', $columnConstraint);
                             $columnConstraint = trim($columnConstraint);
                             $columnType = 'bigserial';
@@ -123,7 +129,9 @@ foreach ($allSrcFiles as $srcFile) {
  */
 function getTypeFromProperty(ReflectionProperty $reflectionProperty): string
 {
-    $setType = getPropertyAttribute($reflectionProperty, Orm\Column::class)->newInstance()->getType();
+    $columnAttr = getPropertyAttribute($reflectionProperty, Orm\Column::class);
+    $setType = $columnAttr->newInstance()->getType();
+    echo "\t\tSet type: " . Color::get($setType, Color::GREEN) . PHP_EOL;
     if($setType) {
         return $setType;
     } else {

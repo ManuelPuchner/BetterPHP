@@ -13,7 +13,7 @@ class Column
 
     public function __construct(array $args) {
         $this->name = $args['name'] ?? throw new InvalidArgumentException('Column name must be specified');
-        $this->type = $args->type ?? null;
+        $this->type = $args['type'] ?? null;
     }
 
     public function getName(): string {
