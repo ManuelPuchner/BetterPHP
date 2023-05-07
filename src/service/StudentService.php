@@ -2,6 +2,7 @@
 
 namespace service;
 
+use betterphp\utils\BodyParam;
 use betterphp\utils\GET;
 use betterphp\utils\Inject;
 use betterphp\utils\PathParam;
@@ -26,19 +27,11 @@ class StudentService {
 
     #[Route('/student')]
     #[POST]
-    public function createStudent(): Response {
-        return Response::ok('Hello World');
+    public function createStudent(#[BodyParam] $test): Response {
+        return Response::ok('Hello World', [
+            'test' => $test
+        ]);
     }
-
-//    #[Route('/student/test')]
-//    #[GET]
-//    public function getStudentsTest(): Response {
-//        return Response::ok('Hello World', [
-//            'test' => 'hello',
-//            'name' => 'John Doe',
-//            'age' => 20
-//        ]);
-//    }
 
     #[Route('/student/{id}')]
     #[GET]

@@ -3,6 +3,7 @@
 
 use betterphp\cli\Color;
 use betterphp\cli\RouteType;
+use betterphp\utils\BodyParam;
 use betterphp\utils\Controller;
 use betterphp\Orm;
 use betterphp\utils\GET;
@@ -31,6 +32,7 @@ require_once dirname(__DIR__) . '/cli/Color.php';
 require_once dirname(__DIR__) . '/cli/RouteType.php';
 require_once dirname(__DIR__) . '/utils/PathParam.php';
 require_once dirname(__DIR__) . '/utils/QueryParam.php';
+require_once dirname(__DIR__) . '/utils/BodyParam.php';
 
 
 require_once dirname(__DIR__) . '/cli/htaccess.php';
@@ -38,7 +40,7 @@ require_once dirname(__DIR__) . '/cli/utilfunctions.php';
 require_once dirname(__DIR__) . '/cli/generateQueryParamRoute.php';
 require_once dirname(__DIR__) . '/cli/generateNormalRoute.php';
 require_once dirname(__DIR__) . '/cli/generatePathParamRoute.php';
-
+require_once dirname(__DIR__) . '/cli/generateBodyParamRoute.php';
 
 function deleteDirRecursively(string $dir): void
 {
@@ -168,6 +170,7 @@ function generateRoute($path, $httpMethod, ReflectionMethod $reflection): void
 
     $route_type = getRouteType($reflection);
 
+    echo "\t\t\t" . Color::get("Route type: ", Color::CYAN) . $route_type->name . PHP_EOL;
 
     switch ($route_type) {
         case RouteType::NORMAL:
@@ -195,6 +198,7 @@ function generateRoute($path, $httpMethod, ReflectionMethod $reflection): void
             generateQueryParamRoute($route_dir, $reflection, $httpMethod, $paramNames);
             break;
         case RouteType::BODY_PARAM:
-            throw new Exception('To be implemented');
+            generateBodyParamRoute($route_dir, $reflection, $httpMethod);
+            break;
     }
 }

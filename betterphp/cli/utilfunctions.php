@@ -5,6 +5,7 @@ use betterphp\utils\GET;
 use betterphp\utils\PathParam;
 use betterphp\utils\POST;
 use betterphp\utils\QueryParam;
+use betterphp\utils\BodyParam;
 
 function getHttpMethod(ReflectionMethod $reflection): string {
     $attributes = $reflection->getAttributes();
@@ -85,6 +86,8 @@ function getRouteType(ReflectionMethod $reflectionMethod): RouteType {
                 return RouteType::PATH_PARAM;
             } else if ($attributeClass::class === QueryParam::class) {
                 return RouteType::QUERY_PARAM;
+            } else if ($attributeClass::class === BodyParam::class) {
+                return RouteType::BODY_PARAM;
             }
         }
     }
