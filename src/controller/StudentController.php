@@ -7,6 +7,7 @@ use PDO;
 
 require_once dirname(__DIR__) . '/../betterphp/utils/Controller.php';
 
+#[\betterphp\utils\attributes\Controller]
 class StudentController extends Controller
 {
     public function getStudents(): array

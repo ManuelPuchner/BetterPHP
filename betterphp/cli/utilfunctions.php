@@ -6,7 +6,9 @@ use betterphp\utils\attributes\GET;
 use betterphp\utils\attributes\PathParam;
 use betterphp\utils\attributes\POST;
 use betterphp\utils\attributes\QueryParam;
+use betterphp\utils\attributes\Controller;
 
+require_once dirname(__DIR__) . '/utils/attributes/Controller.php';
 
 function deleteDirRecursively(string $dir): void
 {

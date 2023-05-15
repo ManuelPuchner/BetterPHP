@@ -3,7 +3,6 @@
 namespace service;
 
 use betterphp\utils\attributes\GET;
-use betterphp\utils\attributes\Inject;
 use betterphp\utils\attributes\Route;
 use betterphp\utils\attributes\Service;
 use betterphp\utils\Response;

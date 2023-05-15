@@ -11,30 +11,28 @@ function generateQueryParamRoute(string $filePath, ReflectionMethod $reflection,
 
     if ($_oldContent) {
         $useStatements = getUseOldContent($_oldContent);
-        $requireStatements = getRequiresOldContent($_oldContent);
         $oldContent = getOldContentWithoutRequiresAndUses($_oldContent);
     }
 
+    $pathOfClassOfMethod = dirname(__DIR__) . '/../src/' . str_replace('\\', '/', $reflection->getDeclaringClass()->getName()) . '.php';
+    $_oldContentSrcFile = @file_get_contents($pathOfClassOfMethod);
+    $_srcUseImports = getUseOldContent($_oldContentSrcFile);
+    $useStatements = array_merge($useStatements ?? [], $_srcUseImports);
+
     $content = '<?php
 use betterphp\utils\Response;
-use betterphp\utils\ApiException;' . PHP_EOL;
+use betterphp\utils\ApiException;
+use betterphp\utils\Autoloader;' . PHP_EOL;
 
-    if (isset($useStatements)) {
+
         foreach ($useStatements as $useStatement) {
             $content .= $useStatement . PHP_EOL;
         }
-    }
 
-    $content .= '
 
-require_once "/var/www/betterphp/utils/Response.php";
-require_once "/var/www/betterphp/utils/ApiException.php";' . PHP_EOL;
+    $content .= 'require_once "/var/www/betterphp/utils/Autoloader.php";' .
+        'Autoloader::load();' . PHP_EOL;
 
-    if (isset($requireStatements)) {
-        foreach ($requireStatements as $requireStatement) {
-            $content .= $requireStatement . PHP_EOL;
-        }
-    }
 
 
     $content .= '

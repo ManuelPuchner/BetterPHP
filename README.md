@@ -4,13 +4,9 @@
 - docker
 - php 8.0
 ## Installation
-### Download ``install-betterphp.sh``
+### Download `install-betterphp.sh` and run
 ````shell
-$ curl -O https://raw.githubusercontent.com/ManuelPuchner/BetterPHP/main/install-betterphp.sh && chmod +x install-betterphp.sh
-````
-### Run ``install-betterphp.sh``
-````shell
-$ ./install-betterphp.sh
+$ curl -s https://raw.githubusercontent.com/ManuelPuchner/BetterPHP/main/install-betterphp.sh | bash 
 ````
 
 ## How to use
@@ -19,7 +15,7 @@ $ ./install-betterphp.sh
 $ ./betterphp.sh dev
 ````
 
-### Create create.sql file
+### Create `create.sql` file
 ````shell
 $ ./betterphp.sh db generate
 ````
@@ -32,7 +28,7 @@ $ ./betterphp.sh db generate
 ## How to write the api
 ### model
 - create a model in the `src/model` folder
-   - the model must extend the 'Entity' class
+   - the model must have the attribute 'Entity'
      ```php
 
         require_once dirname(__DIR__) . '/../betterphp/utils/Entity.php';

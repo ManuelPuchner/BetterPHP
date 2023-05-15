@@ -65,9 +65,9 @@ foreach ($allSrcFiles as $srcFile) {
         if (count($attr) === 0) continue;
 
         if (getClassAttribute($reflection, Orm\Entity::class)) {
-            handleModel($reflection);
+            handleModel($reflection, $SRC_DIR . '/' . $srcFile);
         } else if (getClassAttribute($reflection, Controller::class)) {
-            handleController($reflection);
+            handleController($reflection, $SRC_DIR . '/' . $srcFile);
         } else if (getClassAttribute($reflection, Service::class)) {
             handleService($reflection);
         }
@@ -81,14 +81,20 @@ foreach ($allSrcFiles as $srcFile) {
 }
 
 
-function handleModel(ReflectionClass $reflection): void
+function handleModel(ReflectionClass $reflection, string $path): void
 {
     echo Color::get("Handling model: ", Color::CYAN) . $reflection->getName() . PHP_EOL;
+
+    @mkdir(dirname(__DIR__) . '/../dist/model/', 0777, true);
+    @copy($path, dirname(__DIR__) . '/../dist/model/' . $reflection->getShortName() . '.php');
 }
 
-function handleController(ReflectionClass $reflection): void
+function handleController(ReflectionClass $reflection, string $path): void
 {
     echo Color::get("Handling controller: ", Color::CYAN) . $reflection->getName() . PHP_EOL;
+
+    @mkdir(dirname(__DIR__) . '/../dist/controller/', 0777, true);
+    @copy($path, dirname(__DIR__) . '/../dist/controller/' . $reflection->getShortName() . '.php');
 }
 
 /**
@@ -161,3 +167,5 @@ function generateRoute($path, $httpMethod, ReflectionMethod $reflection): void
             break;
     }
 }
+
+require_once dirname(__DIR__) . '/cli/copyEnvFile.php';
