@@ -6,7 +6,7 @@ use betterphp\utils\attributes\Route;
 /**
  * @throws ReflectionException
  */
-function generatePathParamRoute(string $filePath, ReflectionMethod $reflection, string $httpMethod): void
+function generatePathParamRoute(string $filePath, ReflectionMethod $reflection, string $httpMethod, &$endpoints, string $path): void
 {
     $pathParams = [];
     $params = $reflection->getParameters();
@@ -19,7 +19,24 @@ function generatePathParamRoute(string $filePath, ReflectionMethod $reflection, 
             }
         }
     }
+
     generateQueryParamRoute($filePath, $reflection, $httpMethod, $pathParams);
+
+    $pathParams = array_map(function ($paramName) {
+        return [
+            "name" => $paramName,
+            "in" => "path"
+        ];
+    }, $pathParams);
+    $endpoints[$path][strtolower($httpMethod)] = [
+        "parameters" => $pathParams,
+        "responses" => [
+            "200" => [
+                "description" => "OK"
+            ]
+        ]
+    ];
+
 
     $path = getMethodAttribute($reflection, Route::class)->newInstance()->getPath();
     addToHtaccess($reflection, $path);

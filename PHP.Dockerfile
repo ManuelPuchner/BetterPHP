@@ -4,11 +4,13 @@ RUN a2enmod rewrite
 
 
 COPY ./src /var/www/html
+COPY ./000-default.conf /etc/apache2/sites-available/000-default.conf
 
 RUN chown -R www-data:www-data /var/www/html
 
 # suppress php warnings
 RUN echo "error_reporting = E_ALL & ~E_WARNING & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+
 
 
 # add pgsql pdo

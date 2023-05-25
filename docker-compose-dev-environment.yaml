@@ -33,15 +33,15 @@ services:
   web:
     container_name: web-betterphp
     build:
-        context: .
-        dockerfile: PHP.Dockerfile
+      context: .
+      dockerfile: PHP.Dockerfile
     volumes:
       - ./dist:/var/www/html
       - ./betterphp/utils:/var/www/betterphp/utils
     ports:
       - 8080:80
     networks:
-        - postgres-betterphp
+      - postgres-betterphp
 
 networks:
   postgres-betterphp:

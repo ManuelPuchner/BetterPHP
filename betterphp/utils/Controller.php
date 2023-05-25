@@ -8,22 +8,32 @@ require_once __DIR__ . '/DBConnection.php';
 
 abstract class Controller
 {
-    private static ?Controller $instance = null;
-    private static PDO $connection;
+    private static array $instances = [];
+    protected static PDO $connection;
+
+
+    protected function __construct()
+    {
+        // Protected constructor to prevent direct instantiation
+        self::$connection = DBConnection::getInstance()->getConnection();
+    }
 
     public static function getInstance(): static
     {
-        if (is_null(self::$instance)) {
-            self::$instance = new static();
-            self::$connection = DBConnection::getInstance()->getConnection();
+        $className = static::class;
+        if (!isset(self::$instances[$className])) {
+            self::$instances[$className] = new static();
+            self::$instances[$className]->initialize();
         }
-        return self::$instance;
+        return self::$instances[$className];
     }
 
-    public function getConnection(): PDO
+    protected function initialize(): void
     {
-        return self::$connection;
+        // Override this method in subclass if needed
     }
 
-    private function __construct() {}
+    // Other common methods or properties for controllers
+
+
 }

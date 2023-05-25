@@ -18,6 +18,8 @@ require_once dirname(__DIR__) . '/utils/attributes/Controller.php';
 require_once dirname(__DIR__) . '/utils/attributes/Service.php';
 require_once dirname(__DIR__) . '/utils/attributes/GET.php';
 require_once dirname(__DIR__) . '/utils/attributes/POST.php';
+require_once dirname(__DIR__) . '/utils/attributes/DELETE.php';
+require_once dirname(__DIR__) . '/utils/attributes/PUT.php';
 require_once dirname(__DIR__) . '/utils/attributes/Getter.php';
 require_once dirname(__DIR__) . '/utils/attributes/Setter.php';
 require_once dirname(__DIR__) . '/utils/attributes/Route.php';
@@ -46,13 +48,17 @@ deleteDirRecursively($API_DIR);
 @mkdir(dirname(__DIR__). '/../dist/', 0777, true);
 
 $htaccessFile = fopen( dirname(__DIR__). '/../dist/.htaccess', 'w');
-fwrite($htaccessFile, "RewriteEngine On" . PHP_EOL);
+fwrite($htaccessFile, '
+' . PHP_EOL . "RewriteEngine On" . PHP_EOL);
 fclose($htaccessFile);
+
 
 
 # scan src dir for entities
 $allSrcFiles = scanAllDir($SRC_DIR);
 
+
+$endpoints = [];
 foreach ($allSrcFiles as $srcFile) {
     require_once $SRC_DIR . "/" . $srcFile;
     try {
@@ -69,7 +75,17 @@ foreach ($allSrcFiles as $srcFile) {
         } else if (getClassAttribute($reflection, Controller::class)) {
             handleController($reflection, $SRC_DIR . '/' . $srcFile);
         } else if (getClassAttribute($reflection, Service::class)) {
-            handleService($reflection);
+            /*
+             * endpoints: [
+             *  "/api/endpoint1": {
+             *      "GET": {
+             *        "params": []
+             *      }
+             *  }
+             * ]
+             */
+
+            handleService($reflection, $endpoints);
         }
 
 
@@ -79,6 +95,26 @@ foreach ($allSrcFiles as $srcFile) {
     }
 
 }
+
+// generate swagger
+$swaggerFile = fopen(dirname(__DIR__) . '/../dist/swagger.json', 'w');
+
+$endpoints = json_encode($endpoints, JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES);
+fwrite($swaggerFile, '
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "BetterPHP API",
+    "description": "BetterPHP API",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080/api"
+    }
+  ],
+  "paths": ' . $endpoints .
+    '}' . PHP_EOL);
 
 
 function handleModel(ReflectionClass $reflection, string $path): void
@@ -97,11 +133,12 @@ function handleController(ReflectionClass $reflection, string $path): void
     @copy($path, dirname(__DIR__) . '/../dist/controller/' . $reflection->getShortName() . '.php');
 }
 
+
 /**
  * @throws ReflectionException
  * @throws Exception
  */
-function handleService(ReflectionClass $reflection): void
+function handleService(ReflectionClass $reflection, array &$endpoints): void
 {
     echo Color::get("Handling service: ", Color::CYAN) . $reflection->getName() . PHP_EOL;
 
@@ -113,9 +150,12 @@ function handleService(ReflectionClass $reflection): void
         $route = getMethodAttribute($method, Route::class);
         if($route) {
             $path = $route->newInstance()->getPath();
+
             $httpMethod = getHttpMethod($method);
 
-            generateRoute($path, $httpMethod, $method);
+
+
+            generateRoute($path, $httpMethod, $method, $endpoints);
         }
     }
 }
@@ -124,7 +164,7 @@ function handleService(ReflectionClass $reflection): void
 /**
  * @throws Exception
  */
-function generateRoute($path, $httpMethod, ReflectionMethod $reflection): void
+function generateRoute($path, $httpMethod, ReflectionMethod $reflection, &$endpoints): void
 {
     $API_DIR = dirname(__DIR__) . '/../dist/api';
 
@@ -139,11 +179,19 @@ function generateRoute($path, $httpMethod, ReflectionMethod $reflection): void
 
     switch ($route_type) {
         case RouteType::NORMAL:
+            $endpoints[$path][strtolower($httpMethod)] = [
+                "responses" => [
+                    "200" => [
+                        "description" => "OK"
+                    ]
+                ]
+            ];
             generateNormalRoute($route_dir, $reflection, $httpMethod);
             break;
         case RouteType::PATH_PARAM:
-            generatePathParamRoute($route_dir, $reflection, $httpMethod);
+            generatePathParamRoute($route_dir, $reflection, $httpMethod, $endpoints, $path);
             break;
+
         case RouteType::QUERY_PARAM:
             $params = $reflection->getParameters();
             array_filter($params, function ($param) {
@@ -160,9 +208,36 @@ function generateRoute($path, $httpMethod, ReflectionMethod $reflection): void
             foreach ($params as $param) {
                 $paramNames[] = $param->getName();
             }
+            $params = array_map(function ($paramName) {
+                return [
+                    "name" => $paramName,
+                    "in" => "query"
+                ];
+            }, $paramNames);
+            $endpoints[$path][strtolower($httpMethod)] = [
+                "parameters" => $params,
+                "responses" => [
+                    "200" => [
+                        "description" => "OK"
+                    ]
+                ]
+            ];
             generateQueryParamRoute($route_dir, $reflection, $httpMethod, $paramNames);
             break;
         case RouteType::BODY_PARAM:
+            $endpoints[$path][strtolower($httpMethod)] = [
+                "parameters" => [
+                    [
+                        "name" => "body",
+                        "in" => "body"
+                    ]
+                ],
+                "responses" => [
+                    "200" => [
+                        "description" => "OK"
+                    ]
+                ]
+            ];
             generateBodyParamRoute($route_dir, $reflection, $httpMethod);
             break;
     }

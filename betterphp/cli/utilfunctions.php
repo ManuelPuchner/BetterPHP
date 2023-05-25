@@ -2,14 +2,17 @@
 
 use betterphp\cli\RouteType;
 use betterphp\utils\attributes\BodyParam;
+use betterphp\utils\attributes\DELETE;
 use betterphp\utils\attributes\GET;
 use betterphp\utils\attributes\PathParam;
 use betterphp\utils\attributes\POST;
+use betterphp\utils\attributes\ProtectedRoute;
+use betterphp\utils\attributes\PUT;
 use betterphp\utils\attributes\QueryParam;
 use betterphp\utils\attributes\Controller;
 
 require_once dirname(__DIR__) . '/utils/attributes/Controller.php';
-
+require_once dirname(__DIR__) . '/utils/attributes/ProtectedRoute.php';
 function deleteDirRecursively(string $dir): void
 {
     if (!is_dir($dir)) {
@@ -54,6 +57,10 @@ function getHttpMethod(ReflectionMethod $reflection): string {
             return 'GET';
         } else if ($attributeClass::class === POST::class) {
             return 'POST';
+        } else if ($attributeClass::class === DELETE::class) {
+            return 'DELETE';
+        } else if ($attributeClass::class === PUT::class) {
+            return 'PUT';
         }
     }
     return '';
@@ -223,6 +230,17 @@ function getPropertyAttribute(ReflectionProperty $reflection, string $attributeC
         $attributeClass = $attribute->newInstance();
         if ($attributeClass::class === $classToFind->getName()) {
             return $attribute;
+        }
+    }
+    return false;
+}
+
+function isProtectedRoute(ReflectionMethod $reflection): bool {
+    $attributes = $reflection->getAttributes();
+    foreach ($attributes as $attribute) {
+        $attributeClass = $attribute->newInstance();
+        if ($attributeClass::class === ProtectedRoute::class) {
+            return true;
         }
     }
     return false;

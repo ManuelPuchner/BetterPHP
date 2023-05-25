@@ -4,6 +4,23 @@ ACCENT_COLOR="\033[0;36m"
 RESET_COLOR="\033[0m"
 ERROR_COLOR="\033[1;31m"
 
+execute_cleanup=true
+
+cleanup() {
+  if [ "$execute_cleanup" = false ]; then
+    return
+  fi
+  echo ""
+  echo "Cleaning up..."
+  if checkDevContainersRunning; then
+    echo "Stopping development environment..."
+    docker compose -f docker-compose-dev-environment.yaml down
+  fi
+  echo "Done."
+}
+
+trap cleanup EXIT
+
 
 # check if php is installed and has version >= 8.0
 if ! command -v php &> /dev/null
@@ -39,17 +56,40 @@ checkDockerInstallation()
   fi
 }
 
-function checkDevContainersRunning {
-  ispostgresrunning=$(docker inspect -f '{{.State.Running}}' postgres-betterphp)
-  ispgadminrunning=$(docker inspect -f '{{.State.Running}}' pgadmin-betterphp)
-  isapacherunning=$(docker inspect -f '{{.State.Running}}' web-betterphp)
+function checkProdContainersRunning {
+  if docker container inspect postgres-betterphp-3ahitm >/dev/null 2>&1 &&
+     docker container inspect web-betterphp-3ahitm >/dev/null 2>&1; then
+    ispostgresrunning=$(docker inspect -f '{{.State.Running}}' postgres-betterphp-3ahitm)
+    isapacherunning=$(docker inspect -f '{{.State.Running}}' web-betterphp-3ahitm)
 
-  if [ "$ispostgresrunning" == "true" ] && [ "$ispgadminrunning" == "true" ] && [ "$isapacherunning" == "true" ]; then
-    return 0
+    if [ "$ispostgresrunning" == "true" ]  && [ "$isapacherunning" == "true" ]; then
+      return 0
+    else
+      return 1
+    fi
   else
     return 1
   fi
 }
+
+function checkDevContainersRunning {
+  if docker container inspect postgres-betterphp-3ahitm >/dev/null 2>&1 &&
+     docker container inspect pgadmin-betterphp-3ahitm >/dev/null 2>&1 &&
+     docker container inspect web-betterphp-3ahitm >/dev/null 2>&1; then
+    ispostgresrunning=$(docker inspect -f '{{.State.Running}}' postgres-betterphp-3ahitm)
+    ispgadminrunning=$(docker inspect -f '{{.State.Running}}' pgadmin-betterphp-3ahitm)
+    isapacherunning=$(docker inspect -f '{{.State.Running}}' web-betterphp-3ahitm)
+
+    if [ "$ispostgresrunning" == "true" ] && [ "$ispgadminrunning" == "true" ] && [ "$isapacherunning" == "true" ]; then
+      return 0
+    else
+      return 1
+    fi
+  else
+    return 1
+  fi
+}
+
 
 function installInotifyAwait() {
   # Check the operating system
@@ -139,6 +179,20 @@ function watchDirectoryAndRebuild() {
   fi
 }
 
+function checkPgAdminRunning {
+  if docker container inspect pgadmin-betterphp-3ahitm >/dev/null 2>&1; then
+    ispgadminrunning=$(docker inspect -f '{{.State.Running}}' pgadmin-betterphp-3ahitm)
+
+    if [ "$ispgadminrunning" == "true" ]; then
+      return 0
+    else
+      return 1
+    fi
+  else
+    return 1
+  fi
+}
+
 
 checkBetterphpInstallation
 checkDockerInstallation
@@ -147,6 +201,7 @@ ARG=$1
 
 # check if argument is dev
 if [ "$ARG" == "dev" ]; then
+
 
   # check if dev containers are running
   if checkDevContainersRunning; then
@@ -194,7 +249,76 @@ elif [ "$ARG" == "db" ]; then
         echo -e "$ERROR_COLOR No argument provided.$RESET_COLOR Please run 'betterphp db generate' to generate create statements."
         exit
     fi
+elif [ "$ARG" == "build" ]; then
+  echo "Compiling api..."
+  php ./betterphp/cli/index.php
+  echo -e "$ACCENT_COLOR Done.$RESET_COLOR"
+  exit
+elif [ "$ARG" == "start" ]; then
+  echo "Starting production application..."
+
+  # check if production containers are running
+  if checkProdContainersRunning; then
+    echo "Production environment is already running."
+    echo -e "$ACCENT_COLOR You can now access the application at http://localhost:8080 $RESET_COLOR"
+    exit
+  else
+    echo "Starting production environment..."
+    docker compose -f docker-compose-dev-environment.yaml up -d
+
+    # stop and remove pgadmin if it is running
+    if checkPgAdminRunning; then
+      echo "Stopping pgadmin..."
+      docker stop pgadmin-betterphp-3ahitm
+      docker rm pgadmin-betterphp-3ahitm
+    fi
+
+    if checkProdContainersRunning; then
+      echo "Production environment started successfully."
+      echo -e "$ACCENT_COLOR You can now access the application at http://localhost:8080 $RESET_COLOR"
+    else
+       echo -e "$ERROR_COLOR Production environment could not be started.$RESET_COLOR"
+    fi
+
+    exit;
+  fi
+
+  echo -e "$ACCENT_COLOR Done.$RESET_COLOR"
+  exit
+elif [ "$ARG" == "stop" ]; then
+  echo "Stopping production environment..."
+
+  # stop and remove pgadmin if it is running
+  if checkPgAdminRunning; then
+    echo "Stopping pgadmin..."
+    docker stop pgadmin-betterphp-3ahitm
+    docker rm pgadmin-betterphp-3ahitm
+  fi
+
+  # stop and remove production containers
+  if checkProdContainersRunning; then
+    echo "Stopping production environment..."
+    docker compose -f docker-compose-dev-environment.yaml down
+    echo -e "$ACCENT_COLOR Done.$RESET_COLOR"
+    exit
+  else
+    echo "Production environment is not running."
+    echo -e "$ACCENT_COLOR Done.$RESET_COLOR"
+    exit
+  fi
+elif [ "$ARG" == "help" ]; then
+  echo "Available commands:"
+  echo "  betterphp dev"
+  echo "  betterphp db generate"
+  echo "  betterphp build"
+  echo "  betterphp start"
+  echo "  betterphp stop"
+  echo "  betterphp help"
+  exit
 else
   echo -e "$ERROR_COLOR No argument provided.$RESET_COLOR Please run 'betterphp dev' to start the development server."
   exit
 fi
+
+
+

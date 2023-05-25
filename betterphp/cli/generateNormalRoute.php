@@ -23,13 +23,14 @@ function generateNormalRoute(string $filePath, ReflectionMethod $reflection, str
     $useStatements = array_merge($useStatements ?? [], $_srcUseImports);
 
     $content = '<?php
+session_start();
 use betterphp\utils\Response;
 use betterphp\utils\ApiException;
 use betterphp\utils\Autoloader;' . PHP_EOL;
 
-        foreach ($useStatements as $useStatement) {
-            $content .= $useStatement . PHP_EOL;
-        }
+    foreach ($useStatements as $useStatement) {
+        $content .= $useStatement . PHP_EOL;
+    }
 
     $content .= '
 require_once "/var/www/betterphp/utils/Autoloader.php";' . PHP_EOL;
@@ -38,7 +39,18 @@ require_once "/var/www/betterphp/utils/Autoloader.php";' . PHP_EOL;
 
     $content .= '
 
-if($_SERVER[\'REQUEST_METHOD\'] === \'' . $httpMethod . '\') {
+if($_SERVER[\'REQUEST_METHOD\'] === \'' . $httpMethod . '\') {' . PHP_EOL;
+
+    if(isProtectedRoute($reflection)) {
+        $content .= '
+    if(!isset($_SESSION[\'user\'])) {
+        Response::error(HttpErrorCodes::HTTP_UNAUTHORIZED, "You are not logged in")->send();
+    }
+' . PHP_EOL;
+    }
+
+    $content .= '
+
     $callback = ' . methodToString($reflection) . '
     
     $response = $callback();
